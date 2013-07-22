@@ -23,5 +23,13 @@
             "id": 4,
             "label": "label-4",
             "text": "4Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et libero velit4."
+        },
+        {
+            "headers_type":true,
+            "values":[
+                "Заголовок1",
+                "Заголовок2",
+                "Заголовок3"
+            ]
         }
 ]

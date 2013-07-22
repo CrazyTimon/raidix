@@ -29,27 +29,45 @@ Main.TableView = Backbone.View.extend({
         this.collection.each(this.addOne, this);
         return this;
     },
-    addOne: function(task) {
-        var task = new Main.RowView({ model: task });
-        this.$el.append( task.render().el );
+    addOne: function(row_model) {
+        var table_row = new Main.RowView({ model: row_model, is_header: row_model.get("headers_type") });
+        if(table_row.model.get("headers_type")){
+            this.$el.prepend( table_row.render().el );        
+        } else {
+            this.$el.append( table_row.render().el );            
+        }
     }
 });
 
 Main.RowView = Backbone.View.extend({
     tagName: 'tr',
     renderRow: function(){
-        var row = _.invoke(this.model.toJSON(),function(){
-                return "<td>"+this+"</td>"
-            }),
+        var row = [],
             delet_el = $("<td></td>",{
-                "class":"js-delete-row",
-                "text":"x",
+                "class":"js-delete-row ui-costom-cursor-pointer",
                 "data-id":this.model.id
             });
-        return delet_el[0].outerHTML + row.join("");
+            row = _.invoke(this.model.toJSON(),function(){
+                return "<td>"+this+"</td>"
+            });
+            delet_el.html("x");
+        return delet_el.get(0).outerHTML + row.join("");
+    },
+    renderHeader: function(){
+        var row = [],
+            delet_el = $("<th></th>");
+            row = _.invoke(this.model.toJSON().values,function(){
+                return "<th>"+this+"</th>"
+            });
+            delet_el.html("Удалить строку")
+        return delet_el.get(0).outerHTML + row.join("");
     },
     render: function() {
-        this.$el.html(this.renderRow());
+        if(this.options.is_header){
+            this.$el.html(this.renderHeader());
+        } else {
+            this.$el.html(this.renderRow());            
+        }
         return this;    
     }
 });
