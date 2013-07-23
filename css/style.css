@@ -25,3 +25,11 @@ table td {
 .ui-costom-cursor-pointer{
     cursor:pointer;
 }
+
+.onEdit{
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+    color: #333;
+    border: 1px dashed #666;
+    margin: -9px 1px -11px -9px;
+}

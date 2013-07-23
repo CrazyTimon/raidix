@@ -15,6 +15,7 @@ Main.Collections = Backbone.Collection.extend({
 
 Main.TableView = Backbone.View.extend({
     tagName: "table",
+    className: "js_table",
     events:{
         "click .js-delete-row": "onClickDelete"
     },
@@ -41,17 +42,35 @@ Main.TableView = Backbone.View.extend({
 
 Main.RowView = Backbone.View.extend({
     tagName: 'tr',
+    events: {
+        "click td": "onCellClick"
+    },
+    onCellClick: function(e){//Можно реализовать и через модель, для это нужно будет завести модель под каждую ячейку
+        debugger;
+        var $el = $(e.currentTarget),
+            $input = $("<textarea>",{
+                name: $el.data("name"),
+                text: $el.html(),
+                style: "width: " + $el.width() + "px;",
+                class: "onEdit"
+            });
+        $el.html($input);
+    },
     renderRow: function(){
-        var row = [],
+        var that = this,
+            row = [],
             delet_el = $("<td></td>",{
                 "class":"js-delete-row ui-costom-cursor-pointer",
-                "data-id":this.model.id
+                "data-id":this.model.id,
+                "text":"x"
             });
-            row = _.invoke(this.model.toJSON(),function(){
+            this.$el.append(delet_el);
+            _.each(this.model.toJSON(), function(value, name){
+                that.$el.append($("<td></td>",{"text": value, "data-name": name}));
+            });
+            /*row = _.invoke(this.model.toJSON(),function(a,b){
                 return "<td>"+this+"</td>"
-            });
-            delet_el.html("x");
-        return delet_el.get(0).outerHTML + row.join("");
+            });*/
     },
     renderHeader: function(){
         var row = [],
@@ -60,13 +79,13 @@ Main.RowView = Backbone.View.extend({
                 return "<th>"+this+"</th>"
             });
             delet_el.html("Удалить строку")
-        return delet_el.get(0).outerHTML + row.join("");
+        this.$el.html(delet_el.get(0).outerHTML + row.join(""));
     },
     render: function() {
         if(this.options.is_header){
-            this.$el.html(this.renderHeader());
+            this.renderHeader();
         } else {
-            this.$el.html(this.renderRow());            
+            this.renderRow();
         }
         return this;    
     }
